@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Yyug Mohapatro — CS undergrad, AI systems &amp; evaluation</title>
+<meta name="description" content="Second-year CSE student at BMSCE. Retrieval over SEC filings with citation-gated answers, a Redis server unmodified clients connect to, and an SLM benchmark with a live leaderboard.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,400;9..144,700;9..144,900&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --forest:#24402F;
+    --forest-2:#1B3124;
+    --cream:#F4EFE4;
+    --marigold:#F2A81D;
+    --coral:#E85D34;
+    --ink:#121212;
+    --muted:#6B7A70;
+    --display:'Fraunces',Georgia,serif;
+    --body:'DM Sans',system-ui,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--cream);color:var(--ink);font-family:var(--body);font-size:16.5px;line-height:1.6}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 32px}
+  a{color:inherit}
+  a:focus-visible{outline:3px solid var(--marigold);outline-offset:3px}
+
+  /* ============ HERO ============ */
+  .hero{background:var(--forest);color:var(--cream);position:relative;overflow:hidden;padding:26px 0 0}
+  .nav{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap}
+  .logo{font-family:var(--display);font-weight:900;font-size:1.35rem;display:flex;align-items:center;gap:10px}
+  .logo::before{content:"✦";color:var(--coral);font-size:1.1em}
+  .nav-links{display:flex;gap:26px;align-items:center;font-size:14.5px;font-weight:500}
+  .nav-links a{text-decoration:none;opacity:.9}
+  .nav-links a:hover{opacity:1;color:var(--marigold)}
+  .pill{background:var(--marigold);color:var(--ink);padding:10px 20px;border-radius:99px;font-weight:700;font-size:13.5px;text-decoration:none}
+
+  .hero-type{position:relative;padding:44px 0 0}
+  .hero-type h1{
+    font-family:var(--display);font-weight:900;font-variation-settings:'SOFT' 20,'WONK' 1;
+    font-size:clamp(3.2rem,11.5vw,9rem);line-height:.86;letter-spacing:-.04em;
+    margin:0;text-transform:uppercase;position:relative;z-index:2;
+  }
+  .ghost{
+    font-family:var(--display);font-weight:900;font-size:clamp(3.2rem,11.5vw,9rem);
+    line-height:.86;letter-spacing:-.04em;text-transform:uppercase;margin:0;
+    color:transparent;-webkit-text-stroke:1.5px var(--marigold);opacity:.55;
+    pointer-events:none;user-select:none;
+  }
+  .ghost:nth-of-type(2){opacity:.3}
+  .ghost:nth-of-type(3){opacity:.15}
+
+  .hero-meta{
+    position:absolute;right:0;top:34%;text-align:left;font-family:var(--mono);
+    font-size:13.5px;line-height:2.1;z-index:3;
+  }
+  .hero-meta a{text-decoration:none;border-bottom:1px solid rgba(244,239,228,.35)}
+  .hero-meta a:hover{color:var(--marigold);border-color:var(--marigold)}
+
+  .hero-band{background:var(--ink);color:var(--cream);margin-top:26px}
+  .hero-band .wrap{padding-top:26px;padding-bottom:26px;display:flex;gap:36px;flex-wrap:wrap;align-items:center;justify-content:space-between}
+  .hero-band p{margin:0;max-width:62ch;font-size:15px;line-height:1.65}
+  .hero-band b{color:var(--marigold);font-weight:700}
+  .seeking{
+    font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;
+    border:1.5px solid var(--marigold);color:var(--marigold);padding:9px 16px;border-radius:99px;white-space:nowrap;
+  }
+
+  /* ============ INTRO ============ */
+  .intro{padding:88px 0 76px}
+  .intro-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:56px;align-items:start}
+  h2.big{
+    font-family:var(--display);font-weight:900;font-variation-settings:'SOFT' 20,'WONK' 1;
+    font-size:clamp(2.4rem,5.2vw,3.9rem);line-height:1.02;letter-spacing:-.03em;margin:0 0 22px;
+  }
+  .intro p{font-size:17px;max-width:52ch;margin:0 0 16px}
+  .cta{
+    display:inline-flex;align-items:center;gap:10px;background:var(--coral);color:#fff;
+    padding:13px 26px;border-radius:99px;text-decoration:none;font-weight:700;font-size:15px;margin-top:12px;
+  }
+  .cta:hover{background:var(--ink)}
+
+  .factcard{background:var(--forest);color:var(--cream);padding:30px;border-radius:4px;position:relative}
+  .factcard h3{font-family:var(--display);font-weight:700;font-size:1.5rem;margin:0 0 18px;color:var(--marigold)}
+  .factrow{display:flex;justify-content:space-between;gap:16px;padding:11px 0;border-bottom:1px solid rgba(244,239,228,.16);font-size:14.5px}
+  .factrow:last-child{border-bottom:0}
+  .factrow span:first-child{font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;opacity:.7;padding-top:3px}
+  .factrow span:last-child{text-align:right;font-weight:500}
+  .tagfloat{
+    position:absolute;background:var(--marigold);color:var(--ink);font-weight:700;font-size:13px;
+    padding:8px 18px;border-radius:99px;right:-14px;top:-16px;
+  }
+
+  /* ============ DARK SECTION ============ */
+  .dark{background:var(--forest);color:var(--cream);padding:84px 0}
+  .dark h2.big{color:var(--marigold)}
+  .eyebrow{
+    font-family:var(--mono);font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;
+    color:var(--coral);margin:0 0 12px;font-weight:600;
+  }
+
+  /* --- education timeline --- */
+  .edu{display:grid;grid-template-columns:1fr 1fr;gap:56px}
+  .tl{position:relative;padding-left:26px}
+  .tl::before{content:"";position:absolute;left:5px;top:12px;bottom:12px;width:1px;background:rgba(244,239,228,.25)}
+  .tl-item{position:relative;padding:0 0 26px}
+  .tl-item::before{content:"✦";position:absolute;left:-26px;top:-2px;color:var(--coral);font-size:14px}
+  .tl-item .yr{font-family:var(--display);font-weight:700;font-size:1.05rem;color:var(--marigold)}
+  .tl-item .ttl{font-weight:700;font-size:1.02rem;margin-top:2px}
+  .tl-item .sub{font-size:14.5px;opacity:.82;margin-top:2px}
+
+  /* --- skills --- */
+  .skillblock{margin-bottom:26px}
+  .skillblock h4{
+    font-family:var(--mono);font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--marigold);margin:0 0 11px;font-weight:600;
+  }
+  .chips{display:flex;flex-wrap:wrap;gap:8px}
+  .chip{
+    background:rgba(244,239,228,.09);border:1px solid rgba(244,239,228,.2);
+    padding:6px 14px;border-radius:99px;font-size:13.5px;
+  }
+  .chip.hot{background:var(--marigold);color:var(--ink);border-color:var(--marigold);font-weight:600}
+
+  /* --- languages --- */
+  .langs{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:22px 20px;margin-top:8px}
+  .lang{border-top:2px solid var(--marigold);padding-top:12px}
+  .lang b{font-family:var(--display);font-weight:700;font-size:1.22rem;display:block}
+  .lang span{font-size:13.5px;opacity:.8}
+
+  /* ============ WORK / XYZ ============ */
+  .work{padding:88px 0}
+  .xyz-note{
+    background:var(--ink);color:var(--cream);padding:18px 24px;border-radius:4px;
+    font-family:var(--mono);font-size:13px;line-height:1.7;margin:0 0 44px;max-width:74ch;
+  }
+  .xyz-note b{color:var(--marigold)}
+
+  .proj{border-top:2px solid var(--ink);padding:30px 0 34px;display:grid;grid-template-columns:.9fr 2.1fr;gap:44px}
+  .proj:last-of-type{border-bottom:2px solid var(--ink)}
+  .proj-head h3{font-family:var(--display);font-weight:900;font-size:1.65rem;line-height:1.1;margin:0 0 10px;letter-spacing:-.02em}
+  .proj-head h3 a{text-decoration:none;background-image:linear-gradient(var(--marigold),var(--marigold));background-size:100% .28em;background-position:0 88%;background-repeat:no-repeat}
+  .proj-head h3 a:hover{color:var(--coral)}
+  .proj-head .stack{font-family:var(--mono);font-size:11.5px;line-height:1.8;color:var(--muted)}
+  .proj-head .badge{display:inline-block;background:var(--forest);color:var(--cream);font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;padding:5px 11px;border-radius:99px;margin-bottom:12px}
+
+  .xyz{display:grid;gap:14px}
+  .xyz-row{display:grid;grid-template-columns:74px 1fr;gap:16px;align-items:start}
+  .xyz-key{
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+    font-weight:600;padding-top:4px;
+  }
+  .k-x{color:var(--coral)}
+  .k-y{color:#B07800}
+  .k-z{color:var(--forest)}
+  .xyz-val{font-size:15.5px;line-height:1.58}
+  .xyz-val strong{font-weight:700;background:linear-gradient(transparent 62%,rgba(242,168,29,.45) 62%)}
+
+  /* ============ CLOSE ============ */
+  .close{background:var(--ink);color:var(--cream);padding:76px 0}
+  .close h2{font-family:var(--display);font-weight:900;font-size:clamp(2rem,5vw,3.2rem);margin:0 0 18px;letter-spacing:-.02em}
+  .close p{max-width:56ch;margin:0 0 26px;opacity:.85}
+  .closelinks{display:flex;gap:12px;flex-wrap:wrap}
+  .closelinks a{
+    font-family:var(--mono);font-size:13.5px;text-decoration:none;border:1.5px solid rgba(244,239,228,.3);
+    padding:11px 20px;border-radius:99px;
+  }
+  .closelinks a:hover{background:var(--marigold);color:var(--ink);border-color:var(--marigold)}
+
+  /* ============ RESPONSIVE ============ */
+  @media(max-width:900px){
+    .intro-grid,.edu,.proj{grid-template-columns:1fr;gap:36px}
+    .hero-meta{position:static;margin-top:24px;text-align:left}
+    .ghost{display:none}
+    .langs{grid-template-columns:1fr}
+  }
+  @media(max-width:560px){
+    .wrap{padding:0 20px}
+    .nav-links{display:none}
+    .xyz-row{grid-template-columns:1fr;gap:4px}
+    .xyz-key{padding-top:0}
+  }
+  @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<!-- ================= HERO ================= -->
+<div class="hero">
+  <div class="wrap">
+    <nav class="nav">
+      <div class="logo">Yyug Mohapatro</div>
+      <div class="nav-links">
+        <a href="#about">About</a>
+        <a href="#skills">Skills</a>
+        <a href="#work">Work</a>
+        <a class="pill" href="mailto:rajyyug@gmail.com">Get in touch</a>
+      </div>
+    </nav>
+
+    <div class="hero-type">
+      <h1>Portfolio</h1>
+      <p class="ghost" aria-hidden="true">Portfolio</p>
+      <p class="ghost" aria-hidden="true">Portfolio</p>
+      <div class="hero-meta">
+        GH: <a href="https://github.com/rajyyug1132">/rajyyug1132</a><br>
+        LI: <a href="https://www.linkedin.com/in/yyug-mohapatro-a16405299/">/yyug-mohapatro</a><br>
+        EM: <a href="mailto:rajyyug@gmail.com">rajyyug@gmail.com</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-band">
+    <div class="wrap">
+      <p>I build AI systems for the case where a confident wrong answer costs more than no answer.
+      Arithmetic stays outside the model, uncited claims get discarded, and <b>every result below is
+      stated with the number that proves it.</b></p>
+      <span class="seeking">Seeking AI / ML internship · 2026</span>
+    </div>
+  </div>
+</div>
+
+<!-- ================= INTRO ================= -->
+<section class="intro" id="about">
+  <div class="wrap intro-grid">
+    <div>
+      <h2 class="big">Hello,<br>I'm Yyug!</h2>
+      <p>I'm a second-year Computer Science student at B.M.S. College of Engineering in Bengaluru,
+      building Generative AI applications and low-level systems — usually both in the same month.</p>
+      <p>Ten projects are public on GitHub: a retrieval system over SEC filings that refuses to answer
+      without a citation, a Redis server real clients connect to unmodified, and a benchmark that
+      found a 3B model beating a 7B one on throughput at equal quality.</p>
+      <p>I'm looking for an internship where I can do this inside a real codebase, with people who'll
+      tell me when I'm wrong.</p>
+      <a class="cta" href="https://github.com/rajyyug1132">✦ See the code on GitHub</a>
+    </div>
+
+    <div class="factcard">
+      <span class="tagfloat">Available 2026</span>
+      <h3>Quick facts</h3>
+      <div class="factrow"><span>Studying</span><span>B.E. Computer Science<br>BMSCE, Bengaluru</span></div>
+      <div class="factrow"><span>Graduating</span><span>2028</span></div>
+      <div class="factrow"><span>CGPA</span><span>8.0 (first year)</span></div>
+      <div class="factrow"><span>Based in</span><span>Bengaluru, India</span></div>
+      <div class="factrow"><span>Focus</span><span>Generative AI · RAG<br>Evaluation · Systems</span></div>
+      <div class="factrow"><span>Open to</span><span>Remote · Hybrid<br>Part-time or full-time</span></div>
+      <div class="factrow"><span>Contact</span><span>rajyyug@gmail.com</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SKILLS + EDU + LANG ================= -->
+<section class="dark" id="skills">
+  <div class="wrap">
+    <div class="edu">
+
+      <div>
+        <p class="eyebrow">01 — Education</p>
+        <h2 class="big" style="font-size:2.2rem;margin-bottom:26px">Education</h2>
+        <div class="tl">
+          <div class="tl-item">
+            <div class="yr">2024 – 2028</div>
+            <div class="ttl">B.M.S. College of Engineering, Bengaluru</div>
+            <div class="sub">B.E. Computer Science and Engineering · CGPA 8.0 (first year)</div>
+          </div>
+          <div class="tl-item">
+            <div class="yr">2022 – 2024</div>
+            <div class="ttl">BASE PU College, Bengaluru</div>
+            <div class="sub">Pre-University, Class 11–12</div>
+          </div>
+          <div class="tl-item">
+            <div class="yr">2022</div>
+            <div class="ttl">Sri Kumaran Public School</div>
+            <div class="sub">ICSE, Class 10 · 85%</div>
+          </div>
+        </div>
+
+        <p class="eyebrow" style="margin-top:30px">Campus involvement</p>
+        <div class="tl">
+          <div class="tl-item">
+            <div class="yr">2025 – present</div>
+            <div class="ttl">AeroBMSCE — Aerospace &amp; Aeromodelling Club</div>
+            <div class="sub">Building the club's platform: Next.js, Supabase, three-role auth</div>
+          </div>
+          <div class="tl-item" style="padding-bottom:0">
+            <div class="yr">2026</div>
+            <div class="ttl">UTSAV 2026 — Vendor &amp; Logistics Lead</div>
+            <div class="sub">Sourcing and on-ground logistics for the college's flagship fest</div>
+          </div>
+        </div>
+
+        <p class="eyebrow" style="margin-top:34px">03 — Languages</p>
+        <h2 class="big" style="font-size:2.2rem;margin-bottom:18px">Languages</h2>
+        <div class="langs">
+          <div class="lang"><b>Kannada</b><span>Native</span></div>
+          <div class="lang"><b>Gujarati</b><span>Native</span></div>
+          <div class="lang"><b>English</b><span>Fluent — full professional</span></div>
+          <div class="lang"><b>French</b><span>Intermediate</span></div>
+        </div>
+      </div>
+
+      <div>
+        <p class="eyebrow">02 — Technical skills</p>
+        <h2 class="big" style="font-size:2.2rem;margin-bottom:26px">Skills</h2>
+
+        <div class="skillblock">
+          <h4>Programming languages</h4>
+          <div class="chips">
+            <span class="chip hot">Python</span><span class="chip">Rust</span>
+            <span class="chip">TypeScript</span><span class="chip">JavaScript</span>
+            <span class="chip">C</span><span class="chip">SQL</span>
+          </div>
+        </div>
+
+        <div class="skillblock">
+          <h4>Generative AI</h4>
+          <div class="chips">
+            <span class="chip hot">Prompt engineering</span><span class="chip hot">RAG</span>
+            <span class="chip">Tool calling</span><span class="chip">Zero / few-shot prompting</span>
+            <span class="chip">Claude API</span><span class="chip">Gemini API</span>
+            <span class="chip">Ollama</span><span class="chip">LangChain</span>
+            <span class="chip">Hybrid retrieval (BM25 + vector)</span>
+          </div>
+        </div>
+
+        <div class="skillblock">
+          <h4>Data science &amp; ML</h4>
+          <div class="chips">
+            <span class="chip">NumPy</span><span class="chip">Pandas</span>
+            <span class="chip">scikit-learn</span><span class="chip">Hugging Face</span>
+            <span class="chip">stable-baselines3</span><span class="chip">Reinforcement learning</span>
+            <span class="chip">Model evaluation</span><span class="chip">Ragas</span>
+          </div>
+        </div>
+
+        <div class="skillblock">
+          <h4>Engineering &amp; tooling</h4>
+          <div class="chips">
+            <span class="chip">Git</span><span class="chip">GitHub Actions (CI)</span>
+            <span class="chip">FastAPI</span><span class="chip">Next.js</span>
+            <span class="chip">Supabase</span><span class="chip">Redis</span>
+            <span class="chip">ChromaDB</span><span class="chip">Docker</span>
+            <span class="chip">asyncio</span><span class="chip">Automated testing</span>
+          </div>
+        </div>
+
+        <div class="skillblock" style="margin-bottom:0">
+          <h4>Recognition</h4>
+          <div class="chips">
+            <span class="chip hot">Round 3 — The Big Code, Google × HackerEarth CP contest</span>
+            <span class="chip">Shortlisted — Google Student Ambassador</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ================= WORK ================= -->
+<section class="work" id="work">
+  <div class="wrap">
+    <p class="eyebrow" style="color:var(--coral)">04 — Selected work</p>
+    <h2 class="big">What I built,<br>and what it proved</h2>
+
+    <p class="xyz-note">
+      Each project below is stated as <b>X — Y — Z</b>: accomplished <b>[X]</b>,
+      as measured by <b>[Y]</b>, by doing <b>[Z]</b>. Every number is reproducible from the linked repo.
+    </p>
+
+    <!-- 1 -->
+    <div class="proj">
+      <div class="proj-head">
+        <span class="badge">Retrieval</span>
+        <h3><a href="https://github.com/rajyyug1132/stockrag">StockRAG</a></h3>
+        <div class="stack">Python · SEC EDGAR XBRL · BM25 + vector (RRF) · cross-encoder · ChromaDB · LangChain · Ragas · GitHub Actions</div>
+      </div>
+      <div class="xyz">
+        <div class="xyz-row"><span class="xyz-key k-x">Accomplished</span><span class="xyz-val">Eliminated fabricated figures from an AI financial research assistant answering questions over <strong>10-K and 10-Q filings</strong>.</span></div>
+        <div class="xyz-row"><span class="xyz-key k-y">Measured by</span><span class="xyz-val">A CI eval harness that <strong>blocks any merge</strong> regressing citation coverage, plus a hard rule: no citation, no answer — the system refuses instead.</span></div>
+        <div class="xyz-row"><span class="xyz-key k-z">By doing</span><span class="xyz-val">Computing Piotroski, Novy-Marx and Fama-French factors deterministically from XBRL so no model touches an arithmetic path, and fusing BM25 with vector retrieval via RRF, rescored by a cross-encoder.</span></div>
+      </div>
+    </div>
+
+    <!-- 2 -->
+    <div class="proj">
+      <div class="proj-head">
+        <span class="badge">Evaluation</span>
+        <h3><a href="https://github.com/rajyyug1132/slm-json-benchmark">SLM JSON Benchmark</a></h3>
+        <div class="stack">Python · Ollama · Pydantic · open-weight LLaMA-family models · GitHub Pages</div>
+      </div>
+      <div class="xyz">
+        <div class="xyz-row"><span class="xyz-key k-x">Accomplished</span><span class="xyz-val">Identified a <strong>3B model matching a 7B model's answer quality at ~2.5× throughput and half the memory</strong> — and found temperature 0.7 dropping schema validity from <strong>100% to 80%</strong>.</span></div>
+        <div class="xyz-row"><span class="xyz-key k-y">Measured by</span><span class="xyz-val">40 prompts across 5 categories, scored on first-try JSON validity, retry recovery, answer quality, TTFT, tokens/sec and peak memory.</span></div>
+        <div class="xyz-row"><span class="xyz-key k-z">By doing</span><span class="xyz-val">Building an Ollama-based benchmark harness with Pydantic schema validation, published as a live leaderboard anyone can re-run.</span></div>
+      </div>
+    </div>
+
+    <!-- 3 -->
+    <div class="proj">
+      <div class="proj-head">
+        <span class="badge">Systems</span>
+        <h3><a href="https://github.com/rajyyug1132/mini-redis">mini-redis</a></h3>
+        <div class="stack">Python · asyncio · RESP2 wire protocol · standard library only</div>
+      </div>
+      <div class="xyz">
+        <div class="xyz-row"><span class="xyz-key k-x">Accomplished</span><span class="xyz-val">Built a Redis server that production clients treat as the real thing.</span></div>
+        <div class="xyz-row"><span class="xyz-key k-y">Measured by</span><span class="xyz-val"><strong>Unmodified redis-cli and redis-py</strong> connecting and running against it — no shims, no patched client.</span></div>
+        <div class="xyz-row"><span class="xyz-key k-z">By doing</span><span class="xyz-val">Implementing the RESP2 wire protocol from the specification in Python asyncio using zero third-party packages, handling every parsing and serialisation edge case explicitly.</span></div>
+      </div>
+    </div>
+
+    <!-- 4 -->
+    <div class="proj">
+      <div class="proj-head">
+        <span class="badge">Agents</span>
+        <h3><a href="https://github.com/rajyyug1132/ai-pm-meeting-assistant">AI Meeting Assistant</a></h3>
+        <div class="stack">Python · Claude API · Gradio · few-shot templates · Jira + Notion</div>
+      </div>
+      <div class="xyz">
+        <div class="xyz-row"><span class="xyz-key k-x">Accomplished</span><span class="xyz-val">Stopped hallucinated commitments from ever reaching a stakeholder in an automated meeting-to-action pipeline.</span></div>
+        <div class="xyz-row"><span class="xyz-key k-y">Measured by</span><span class="xyz-val">A requirement that <strong>every action item carry a verbatim source quote</strong>, and that an unstated owner comes back <strong>UNASSIGNED</strong> — the one answer guaranteed not to be invented.</span></div>
+        <div class="xyz-row"><span class="xyz-key k-z">By doing</span><span class="xyz-val">Designing a drafts-only, human-approval-gated flow over Claude with audience-specific few-shot templates for exec, team and client emails, wired into Jira and Notion.</span></div>
+      </div>
+    </div>
+
+    <!-- 5 -->
+    <div class="proj">
+      <div class="proj-head">
+        <span class="badge">Embedded</span>
+        <h3><a href="https://github.com/rajyyug1132/aetherquill">Aetherquill</a></h3>
+        <div class="stack">Rust · zero dependencies · ARM cross-compilation · reMarkable 2</div>
+      </div>
+      <div class="xyz">
+        <div class="xyz-row"><span class="xyz-key k-x">Accomplished</span><span class="xyz-val">Shipped an on-device handwriting glyph recognizer to a constrained ARM tablet.</span></div>
+        <div class="xyz-row"><span class="xyz-key k-y">Measured by</span><span class="xyz-val"><strong>83 parity-verified tests</strong> pinning output against a reference implementation, so any refactor that shifts output fails the suite immediately.</span></div>
+        <div class="xyz-row"><span class="xyz-key k-z">By doing</span><span class="xyz-val">Writing it in Rust with zero external crates to keep the binary within the device's limits, and cross-compiling for the reMarkable 2's ARM target.</span></div>
+      </div>
+    </div>
+
+    <!-- 6 -->
+    <div class="proj">
+      <div class="proj-head">
+        <span class="badge">NLP</span>
+        <h3><a href="https://github.com/rajyyug1132/customer-feedback-analyzer">Customer Feedback Analyzer</a></h3>
+        <div class="stack">Python · DistilBERT · BART zero-shot · Pandas · Looker Studio</div>
+      </div>
+      <div class="xyz">
+        <div class="xyz-row"><span class="xyz-key k-x">Accomplished</span><span class="xyz-val">Made automated review tagging trustworthy enough to drive a product dashboard.</span></div>
+        <div class="xyz-row"><span class="xyz-key k-y">Measured by</span><span class="xyz-val">An <strong>agreement rate against star ratings</strong> used as free ground truth, shipped alongside the dashboard so every reading carries a known error bar.</span></div>
+        <div class="xyz-row"><span class="xyz-key k-z">By doing</span><span class="xyz-val">Building a DistilBERT sentiment and BART zero-shot topic pipeline in Pandas, with sarcasm and low-confidence cases routed to a manual review queue.</span></div>
+      </div>
+    </div>
+
+    <!-- 7 -->
+    <div class="proj">
+      <div class="proj-head">
+        <span class="badge">Reinforcement learning</span>
+        <h3><a href="https://github.com/rajyyug1132/BangaloreTrafficEnv">BangaloreTrafficEnv</a></h3>
+        <div class="stack">Python · FastAPI · stable-baselines3 · PPO · multi-agent reward shaping</div>
+      </div>
+      <div class="xyz">
+        <div class="xyz-row"><span class="xyz-key k-x">Accomplished</span><span class="xyz-val">Showed learned traffic-signal control beating conventional control on a simulated Bangalore intersection.</span></div>
+        <div class="xyz-row"><span class="xyz-key k-y">Measured by</span><span class="xyz-val">Head-to-head comparison against <strong>fixed-timer and greedy baselines</strong>, so the improvement is a measured gap over both baselines, not a claim.</span></div>
+        <div class="xyz-row"><span class="xyz-key k-z">By doing</span><span class="xyz-val">Building a multi-agent RL environment served over FastAPI to decouple agents from the simulator, and training PPO agents with stable-baselines3.</span></div>
+      </div>
+    </div>
+
+    <!-- 8 -->
+    <div class="proj">
+      <div class="proj-head">
+        <span class="badge">Full-stack</span>
+        <h3><a href="https://github.com/rajyyug1132/stock-thesis-generator">Stock Thesis Generator</a></h3>
+        <div class="stack">Next.js · TypeScript · Python · Redis · Gemini API · Monte Carlo (Cholesky) · Sharpe / VaR / CVaR</div>
+      </div>
+      <div class="xyz">
+        <div class="xyz-row"><span class="xyz-key k-x">Accomplished</span><span class="xyz-val">Shipped a deployed equity-research tool where fabricated valuation metrics are structurally impossible.</span></div>
+        <div class="xyz-row"><span class="xyz-key k-y">Measured by</span><span class="xyz-val">Every figure in the generated thesis appearing in the fetched-data panel <strong>before</strong> generation runs — the model can't invent a P/E when the P/E is already on screen.</span></div>
+        <div class="xyz-row"><span class="xyz-key k-z">By doing</span><span class="xyz-val">Fetching live NSE data first and constraining generation to those numbers, with correlated Monte Carlo via Cholesky decomposition reporting Sharpe, VaR and CVaR, cached in Redis.</span></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ================= CLOSE ================= -->
+<section class="close">
+  <div class="wrap">
+    <h2>Two more, from hackathons.</h2>
+    <p><b>KisanSetu</b> — a voice-first multilingual agricultural advisory assistant, built for farmers
+    who won't open a dashboard. <b>VoteReady</b> — a guided walkthrough for first-time Indian voters
+    aged 18–22, built for PromptWars Virtual 2026.</p>
+    <p>Every project on this page is public. The links go straight to source — including the tests.</p>
+    <div class="closelinks">
+      <a href="https://github.com/rajyyug1132">github.com/rajyyug1132</a>
+      <a href="https://www.linkedin.com/in/yyug-mohapatro-a16405299/">LinkedIn</a>
+      <a href="mailto:rajyyug@gmail.com">rajyyug@gmail.com</a>
+    </div>
+  </div>
+</section>
+
+</body>
+</html>
